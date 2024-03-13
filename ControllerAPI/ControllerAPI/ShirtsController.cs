@@ -12,20 +12,25 @@ namespace ControllerAPI
         [HttpGet]
         public IActionResult GetShirts()
         {
-            return Ok("Reading all shirts");
+            return Ok(ShirtRepository.GetShirts());
         }
 
         [HttpGet("{id}")]
-        [Shirts_IdValidationFilter]
-        public IActionResult GetShirt([FromRoute] int id)
+        [Shirt_ValidateShirtIdFilter]
+        public IActionResult GetShirtById([FromRoute] int id)
         {
             return Ok(ShirtRepository.GetShirtById(id));
         }
 
         [HttpPost]
+        [Shirt_ValidateCreateShirtFilter]
         public IActionResult CreateShirt([FromBody] Shirt shirt)
         {
-            return Ok($"Creating a shirt");
+            ShirtRepository.AddShirt(shirt);
+
+            return CreatedAtAction(nameof(GetShirtById),
+                new { id = shirt.ShirtId },
+                shirt);
         }
 
         [HttpPost]

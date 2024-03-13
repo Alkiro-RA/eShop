@@ -14,11 +14,11 @@ namespace ControllerAPI.Models
         public string? Color { get; set; }
 
         [Shirt_CorrectSizingAttriute]
-        public int Size { get; set; }
+        public int? Size { get; set; }
         
         [Required]
         public string? Gender { get; set; }
         
-        public double Price { get; set; }
+        public double? Price { get; set; }
     }
 }

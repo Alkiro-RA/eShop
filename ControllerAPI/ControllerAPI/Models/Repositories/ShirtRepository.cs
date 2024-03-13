@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 
 namespace ControllerAPI.Models.Repositories
 {
@@ -17,9 +18,38 @@ namespace ControllerAPI.Models.Repositories
             return Shirts.Any(x => x.ShirtId == id);
         }
 
+        public static List<Shirt> GetShirts()
+        {
+            return Shirts;
+        }
+
         public static Shirt? GetShirtById(int id)
         {
             return Shirts.FirstOrDefault(x => x.ShirtId == id);
+        }
+
+        public static Shirt? GetShirtByProperties(string? brand, string? color, string? gender, int? size)
+        {
+            return Shirts.FirstOrDefault(x =>
+            !string.IsNullOrWhiteSpace(brand) &&
+            !string.IsNullOrWhiteSpace(x.Brand) &&
+            x.Brand.Equals(brand, StringComparison.OrdinalIgnoreCase) &&
+            !string.IsNullOrWhiteSpace(color) &&
+            !string.IsNullOrWhiteSpace(x.Color) &&
+            x.Color.Equals(color, StringComparison.OrdinalIgnoreCase) &&
+            !string.IsNullOrWhiteSpace(gender) &&
+            !string.IsNullOrWhiteSpace(x.Gender) &&
+            x.Gender.Equals(gender, StringComparison.OrdinalIgnoreCase) &&
+            size.HasValue &&
+            x.Size.HasValue &&
+            size.Value == x.Size.Value);
+        }
+
+        public static void AddShirt(Shirt shirt)
+        {
+            int maxId = Shirts.Max(x => x.ShirtId);
+            shirt.ShirtId = maxId + 1;
+            Shirts.Add(shirt);
         }
     }
 }
