@@ -51,5 +51,24 @@ namespace ControllerAPI.Models.Repositories
             shirt.ShirtId = maxId + 1;
             Shirts.Add(shirt);
         }
+
+        public static void UpdateShirt(Shirt shirt)
+        {
+            var shirtToUpdate = Shirts.First(x => x.ShirtId == shirt.ShirtId);
+            shirtToUpdate.Brand = shirt.Brand;
+            shirtToUpdate.Price = shirt.Price;
+            shirtToUpdate.Size = shirt.Size;
+            shirtToUpdate.Color = shirt.Color;
+            shirtToUpdate.Gender = shirt.Gender;
+        }
+
+        public static void DeleteShirt(int shirtId)
+        {
+            var shirt = GetShirtById(shirtId);
+            if (shirt != null)
+            {
+                Shirts.Remove(shirt);
+            }
+        }
     }
 }

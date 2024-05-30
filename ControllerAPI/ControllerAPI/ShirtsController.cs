@@ -1,4 +1,5 @@
-﻿using ControllerAPI.Filters;
+﻿using ControllerAPI.Filters.ActionFilters;
+using ControllerAPI.Filters.ExceptionFilters;
 using ControllerAPI.Models;
 using ControllerAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -40,16 +41,25 @@ namespace ControllerAPI
             return Ok("Creating a shirt from form");
         }
 
-        [HttpPut]
-        public IActionResult UpdateShirt([FromQuery] int id, [FromQuery] string color)
+        [HttpPut("{id}")]
+        [Shirt_ValidateShirtIdFilter]
+        [Shirt_ValidateUpdateShirtFilter]
+        [Shirt_HandleUpdateExceptionsFilter]
+        public IActionResult UpdateShirt(int id, Shirt shirt)
         {
-            return Ok($"Updating shirt with ID {id}, color: {color}");
+            ShirtRepository.UpdateShirt(shirt);
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
+        [Shirt_ValidateShirtIdFilter]
         public IActionResult DeleteShirt(int id)
         {
-            return Ok($"Deleting shirt with ID {id}");
+            var shirt = ShirtRepository.GetShirtById(id);
+            ShirtRepository.DeleteShirt(id);
+
+            return Ok(shirt);
         }
     }
 }
