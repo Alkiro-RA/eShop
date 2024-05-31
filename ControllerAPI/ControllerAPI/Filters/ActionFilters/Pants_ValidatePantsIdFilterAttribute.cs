@@ -1,15 +1,14 @@
 ﻿using ControllerAPI.Data;
-using ControllerAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ControllerAPI.Filters.ActionFilters
 {
-    public class Shirt_ValidateShirtIdFilterAttribute : ActionFilterAttribute
+    public class Pants_ValidatePantsIdFilterAttribute : ActionFilterAttribute
     {
         private readonly ApplicationDbContext db;
 
-        public Shirt_ValidateShirtIdFilterAttribute(ApplicationDbContext db)
+        public Pants_ValidatePantsIdFilterAttribute(ApplicationDbContext db)
         {
             this.db = db;
         }
@@ -17,13 +16,13 @@ namespace ControllerAPI.Filters.ActionFilters
         {
             base.OnActionExecuting(context);
 
-            var shirtId = context.ActionArguments["id"] as int?;
+            var pantsId = context.ActionArguments["id"] as int?;
 
-            if (shirtId.HasValue)
+            if (pantsId.HasValue)
             {
-                if (shirtId.Value <= 0)
+                if (pantsId.Value <= 0)
                 {
-                    context.ModelState.AddModelError("ShirtId", "Shirt ID is invalid.");
+                    context.ModelState.AddModelError("PantsId", "Pants ID is invalid.");
                     var problemDetails = new ValidationProblemDetails(context.ModelState)
                     {
                         Status = StatusCodes.Status400BadRequest
@@ -32,11 +31,11 @@ namespace ControllerAPI.Filters.ActionFilters
                 }
                 else
                 {
-                    var shirt = db.Shirts.Find(shirtId.Value);
+                    var pants = db.Pants.Find(pantsId.Value);
 
-                    if (shirt == null)
+                    if (pants == null)
                     {
-                        context.ModelState.AddModelError("ShirtId", "Shirt ID doesn't exist.");
+                        context.ModelState.AddModelError("PantsId", "Pants ID doesn't exist.");
                         var problemDetails = new ValidationProblemDetails(context.ModelState)
                         {
                             Status = StatusCodes.Status404NotFound
@@ -45,7 +44,7 @@ namespace ControllerAPI.Filters.ActionFilters
                     }
                     else
                     {
-                        context.HttpContext.Items["shirt"] = shirt;
+                        context.HttpContext.Items["pants"] = pants;
                     }
                 }
             }
